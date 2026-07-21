@@ -851,6 +851,11 @@
     if (isAuthed()) { setEditMode(true); } else { openLogin(); }
   });
 
+  // visiting .../#admin jumps straight to the login (or the panel, if already remembered)
+  if (window.location.hash === '#admin') {
+    if (isAuthed()) { setEditMode(true); } else { openLogin(); }
+  }
+
   document.getElementById('al-cancel').addEventListener('click', closeLogin);
 
   document.getElementById('al-toggle-pass').addEventListener('click', function(){
