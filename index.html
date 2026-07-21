@@ -337,9 +337,6 @@
     outline:1px dashed var(--gold-soft);outline-offset:6px;border-radius:8px;
   }
 
-  .admin-link{color:var(--cream-dim);text-decoration:none;}
-  .admin-link:hover{color:var(--gold);}
-
   #admin-login{
     position:fixed;inset:0;z-index:100;
     background:radial-gradient(120% 90% at 50% -10%, var(--bg-raised), var(--bg-panel) 60%, var(--bg-deep) 130%);
@@ -600,10 +597,7 @@
     </div>
     <div class="foot-bottom">
       <span>© <span id="year"></span> <span class="foot-name">Clube Atenas</span></span>
-      <span style="display:flex;gap:18px;">
-        <a class="wa-link" href="https://wa.me/55XXXXXXXXXXX" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">WhatsApp</a>
-        <a class="admin-link" href="#" id="admin-login-trigger">Painel administrativo</a>
-      </span>
+      <a class="wa-link" href="https://wa.me/55XXXXXXXXXXX" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">WhatsApp</a>
     </div>
   </div>
 </footer>
@@ -825,7 +819,6 @@
   var loginOverlay = document.getElementById('admin-login');
   var loginForm = document.getElementById('al-form');
   var loginError = document.getElementById('al-error');
-  var loginTrigger = document.getElementById('admin-login-trigger');
   var passInput = document.getElementById('al-pass');
 
   function isAuthed(){
@@ -845,11 +838,6 @@
     loginForm.reset();
     loginError.textContent = '';
   }
-
-  loginTrigger.addEventListener('click', function(e){
-    e.preventDefault();
-    if (isAuthed()) { setEditMode(true); } else { openLogin(); }
-  });
 
   // visiting .../#admin jumps straight to the login (or the panel, if already remembered)
   if (window.location.hash === '#admin') {
