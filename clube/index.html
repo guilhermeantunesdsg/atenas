@@ -188,6 +188,12 @@
     max-width:34ch;margin:26px auto 0;
   }
   .manifesto p.big strong{font-style:normal;color:var(--gold);font-weight:600;}
+  .manifesto-video{
+    max-width:720px;margin:40px auto 0;border-radius:16px;overflow:hidden;
+    border:1px solid var(--gold-soft);box-shadow:var(--shadow);
+    background:var(--bg-panel);
+  }
+  .manifesto-video video{width:100%;height:auto;display:block;background:#000;}
 
   /* ---------- benefits ---------- */
   .benefits-head{text-align:center;margin-bottom:clamp(36px,6vw,56px);}
@@ -454,6 +460,9 @@
     <div class="container">
       <div class="rule"></div>
       <p class="big">Nada de vários planos ou benefícios complicados. No Clube Atenas, existe apenas <strong>um caminho e um propósito</strong>: proporcionar a melhor experiência com o mundo dos vinhos.</p>
+      <div class="manifesto-video" id="manifesto-video-wrap" hidden>
+        <video id="manifesto-video" controls playsinline preload="metadata"></video>
+      </div>
     </div>
   </section>
 
@@ -641,6 +650,13 @@
       <p class="ap-hint">Atualiza todos os botões "Falar/Quero fazer parte" de uma vez.</p>
       <input type="url" id="ap-wa-input" placeholder="https://wa.me/55...">
       <button class="ap-btn" type="button" id="ap-wa-apply">Aplicar link</button>
+    </div>
+
+    <div class="ap-section">
+      <p class="ap-label">Vídeo</p>
+      <p class="ap-hint">Envie um vídeo (MP4/WebM) para aparecer na página, logo abaixo do texto "Nada de vários planos...". Só funciona no site publicado, não neste preview.</p>
+      <input type="file" id="ap-video-input" accept="video/mp4,video/webm,video/quicktime,video/ogg">
+      <p class="ap-status" id="ap-video-status"></p>
     </div>
 
     <div class="ap-section">
@@ -928,9 +944,57 @@
         .then(function(){ setStatus('Download iniciado.'); })
         .catch(function(err){ setStatus('Não foi possível baixar (' + (err && err.code || 'erro') + ').'); });
     } else {
-      setStatus('Download indisponível nesta visualização.');
+      var blob = new Blob([html], { type: 'text/html' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      setStatus('Download iniciado.');
     }
   });
+</script>
+
+<script type="module">
+  import { upload } from 'https://esm.sh/@vercel/blob@2.6.1/client';
+
+  var ADMIN_KEY = 'edicaoatenas2026@';
+  var videoInput = document.getElementById('ap-video-input');
+  var videoStatus = document.getElementById('ap-video-status');
+  var videoEl = document.getElementById('manifesto-video');
+  var videoWrap = document.getElementById('manifesto-video-wrap');
+
+  if (videoEl && videoEl.getAttribute('src')) {
+    videoWrap.hidden = false;
+  }
+
+  if (videoInput) {
+    videoInput.addEventListener('change', async function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      videoStatus.textContent = 'Enviando vídeo... isso pode levar alguns minutos.';
+      try {
+        var blob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/upload',
+          clientPayload: JSON.stringify({ key: ADMIN_KEY }),
+          multipart: true,
+          onUploadProgress: function (p) {
+            videoStatus.textContent = 'Enviando vídeo... ' + Math.round(p.percentage) + '%';
+          },
+        });
+        videoEl.src = blob.url;
+        videoWrap.hidden = false;
+        videoStatus.textContent = 'Vídeo enviado com sucesso.';
+        if (typeof scheduleSave === 'function') scheduleSave();
+      } catch (err) {
+        videoStatus.textContent = 'Não foi possível enviar (isso só funciona no site publicado, não neste preview). ' + (err && err.message ? err.message : '');
+      }
+    });
+  }
 </script>
 </body>
 </html>
