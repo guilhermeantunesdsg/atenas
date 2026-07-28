@@ -100,10 +100,14 @@
   }
   .logo-lockup{margin-bottom:26px;display:flex;justify-content:center;}
   .hero-logo{width:min(150px,32vw);height:auto;}
-  .hero-wordmark{
-    display:block;font-family:var(--serif);font-weight:500;
-    font-size:clamp(2.1rem,6vw,3.1rem);letter-spacing:.07em;
-    color:var(--cream);text-transform:uppercase;line-height:1;
+  .hero-wordmark{display:flex;flex-direction:column;line-height:1;}
+  .hero-wordmark-top{
+    font-family:var(--serif);font-weight:500;font-size:clamp(1.1rem,3vw,1.5rem);
+    letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:.2em;
+  }
+  .hero-wordmark-main{
+    font-family:var(--serif);font-weight:500;font-size:clamp(2.3rem,6.5vw,3.3rem);
+    letter-spacing:.06em;text-transform:uppercase;color:var(--cream);
   }
   .hero h1{
     font-size:clamp(2.1rem,5.4vw,3.3rem);color:var(--cream);max-width:16ch;margin:0 auto 22px;
@@ -437,7 +441,10 @@
     <div class="container container-wide hero-grid">
       <div class="hero-copy">
         <div class="logo-lockup">
-          <span class="hero-wordmark">Clube Atenas</span>
+          <span class="hero-wordmark">
+            <span class="hero-wordmark-top">Clube</span>
+            <span class="hero-wordmark-main">Atenas</span>
+          </span>
       </div>
         <h1>Muito além de um <em>clube de vinhos</em>.</h1>
         <p class="lead">Uma seleção exclusiva de vinhos, sabores e experiências pensada para transformar cada mês em uma nova descoberta. Benefícios exclusivos, eventos para membros, entrega em casa e uma comunidade para quem acredita que um bom vinho merece ser vivido.</p>
